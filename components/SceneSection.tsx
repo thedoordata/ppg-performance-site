@@ -1,0 +1,187 @@
+"use client";
+
+import { useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+import type { Scene } from "@/lib/scenes";
+
+type SceneStyle = React.CSSProperties & { "--accent": string };
+
+/**
+ * Одна макро-сцена (2–9) як pinned-секція з плейсхолдером (CLAUDE.md фаза 4).
+ * Пін + scrub-таймлайн: сцена «проявляється» з чорного, вміст виїжджає,
+ * наприкінці — знову затемнення (перехід між макро-сценами, ТЗ 3.6 / 5.4).
+ *
+ * Реальні фото/відео відсутні — замість кадру суцільний колір-акцент сцени
+ * + підпис «що має бути в кадрі». Деградація: prefers-reduced-motion →
+ * без піну, статична секція (вміст видимий за замовчуванням).
+ */
+export function SceneSection({ scene }: { scene: Scene }) {
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      gsap.registerPlugin(ScrollTrigger);
+      const q = gsap.utils.selector(root);
+      const mm = gsap.matchMedia();
+
+      mm.add(
+        {
+          motionOk: "(prefers-reduced-motion: no-preference)",
+          isMobile: "(max-width: 768px)",
+          isDesktop: "(min-width: 769px)",
+        },
+        (context) => {
+          const { motionOk, isMobile } = context.conditions as {
+            motionOk: boolean;
+            isMobile: boolean;
+            isDesktop: boolean;
+          };
+          if (!motionOk) return;
+
+          const tl = gsap.timeline({
+            defaults: { ease: "none" },
+            scrollTrigger: {
+              trigger: root.current,
+              start: "top top",
+              end: isMobile ? "+=60%" : "+=90%",
+              pin: true,
+              scrub: 0.5,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+            },
+          });
+
+          tl
+            // проявлення з чорного
+            .fromTo(
+              q(".scene-veil"),
+              { autoAlpha: 1 },
+              { autoAlpha: 0, ease: "power1.out", duration: 0.16 },
+              0,
+            )
+            // фоновий номер-водяний знак
+            .fromTo(
+              q(".scene-num-wm"),
+              { autoAlpha: 0, xPercent: 6 },
+              { autoAlpha: 0.12, xPercent: 0, duration: 0.4 },
+              0.05,
+            )
+            .fromTo(
+              q(".scene-eyebrow"),
+              { autoAlpha: 0, y: 16 },
+              { autoAlpha: 1, y: 0, duration: 0.26 },
+              0.1,
+            )
+            .fromTo(
+              q(".scene-title"),
+              { autoAlpha: 0, yPercent: 40 },
+              { autoAlpha: 1, yPercent: 0, ease: "power3.out", duration: 0.36 },
+              0.14,
+            )
+            .fromTo(
+              q(".scene-sub"),
+              { autoAlpha: 0, y: 20 },
+              { autoAlpha: 1, y: 0, duration: 0.3 },
+              0.26,
+            )
+            .fromTo(
+              q(".scene-chip"),
+              { autoAlpha: 0, y: 14 },
+              { autoAlpha: 1, y: 0, stagger: 0.03, duration: 0.3 },
+              0.32,
+            )
+            .fromTo(
+              q(".scene-media"),
+              { autoAlpha: 0 },
+              { autoAlpha: 1, duration: 0.3 },
+              0.22,
+            )
+            // затемнення на виході (перехід до наступної сцени)
+            .to(
+              q(".scene-veil"),
+              { autoAlpha: 1, ease: "power1.in", duration: 0.14 },
+              0.9,
+            );
+        },
+      );
+
+      return () => mm.revert();
+    },
+    { scope: root },
+  );
+
+  return (
+    <section
+      ref={root}
+      id={`scene-${scene.slug}`}
+      aria-label={`Сцена ${scene.n} — ${scene.name}`}
+      style={{ "--accent": scene.accent } as SceneStyle}
+      className="scene-atmo relative flex h-[100svh] min-h-[600px] w-full items-center overflow-hidden"
+    >
+      {/* Фоновий номер-водяний знак */}
+      <span className="scene-num-wm pointer-events-none absolute -right-2 top-1/2 -translate-y-1/2 font-display text-[30vw] font-extrabold leading-none opacity-0 sm:text-[22vw]">
+        {scene.n}
+      </span>
+
+      {/* Рамка-viewfinder (кінематографічне кадрування) */}
+      <div className="pointer-events-none absolute inset-5 sm:inset-9">
+        <span className="vf-corner absolute left-0 top-0 h-6 w-6 border-l-2 border-t-2" />
+        <span className="vf-corner absolute right-0 top-0 h-6 w-6 border-r-2 border-t-2" />
+        <span className="vf-corner absolute bottom-0 left-0 h-6 w-6 border-b-2 border-l-2" />
+        <span className="vf-corner absolute bottom-0 right-0 h-6 w-6 border-b-2 border-r-2" />
+      </div>
+
+      {/* Вміст сцени */}
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-6 sm:px-10">
+        <div className="max-w-2xl">
+          <div className="scene-eyebrow mb-5 flex flex-wrap items-center gap-3 opacity-0">
+            <span className="scene-dot h-2 w-2 rounded-full" />
+            <span className="font-mono text-xs tracking-[0.3em] text-fog-white/80">
+              {scene.n}&nbsp;/&nbsp;{scene.name.toUpperCase()}
+            </span>
+            <span className="scene-rule h-px w-10" />
+            <span className="font-mono text-[0.6rem] tracking-[0.3em] text-gunmetal-silver/50">
+              ПЛЕЙСХОЛДЕР
+            </span>
+          </div>
+
+          <h2 className="scene-title whitespace-pre-line font-display text-4xl font-extrabold uppercase leading-[1.03] tracking-[0.01em] text-fog-white opacity-0 sm:text-6xl">
+            {scene.title}
+          </h2>
+
+          <p className="scene-sub mt-5 max-w-xl font-body text-sm leading-relaxed text-gunmetal-silver opacity-0 sm:text-base">
+            {scene.subtitle}
+          </p>
+
+          <ul className="mt-7 flex flex-wrap gap-2.5">
+            {scene.services.map((s) => (
+              <li
+                key={s}
+                className="scene-chip px-3 py-1.5 font-mono text-[0.68rem] tracking-[0.08em] opacity-0"
+              >
+                {s}
+              </li>
+            ))}
+          </ul>
+
+          <div className="scene-media mt-8 flex items-start gap-3 opacity-0">
+            <span className="mt-0.5 shrink-0 whitespace-nowrap font-mono text-[0.6rem] tracking-[0.2em] text-gunmetal-silver/45">
+              {"// У КАДРІ"}
+            </span>
+            <p className="max-w-md font-body text-xs leading-relaxed text-gunmetal-silver/55">
+              {scene.media}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Завіса для переходів між сценами */}
+      <div
+        className="scene-veil absolute inset-0 z-20 bg-carbon-black opacity-0"
+        aria-hidden="true"
+      />
+    </section>
+  );
+}

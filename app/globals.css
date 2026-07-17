@@ -159,6 +159,54 @@
 }
 
 /* ===================================================================
+   Фаза 4 — сцени 2–9 (pinned-плейсхолдери)
+   Акцент сцени задається змінною --accent на <section> (inline style).
+   =================================================================== */
+
+/* Суцільний колір-акцент замість реального кадру + глибина/вінʼєтка. */
+.scene-atmo {
+  background:
+    radial-gradient(
+      78% 58% at 74% 32%,
+      color-mix(in srgb, var(--accent) 15%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(90% 80% at 18% 108%, rgba(0, 0, 0, 0.55), transparent 58%),
+    linear-gradient(180deg, #09090b 0%, var(--carbon-black) 58%, #060607 100%);
+}
+
+.scene-rule,
+.scene-dot {
+  background-color: var(--accent);
+}
+
+.scene-num-wm {
+  color: var(--accent);
+}
+
+/* Кути рамки-viewfinder */
+.vf-corner {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+/* Чіп послуги — технічний «тег», гострі кути (не SaaS-пігулка). */
+.scene-chip {
+  border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  color: color-mix(in srgb, var(--fog-white) 82%, transparent);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.scene-chip:hover {
+  border-color: color-mix(in srgb, var(--accent) 80%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--fog-white);
+}
+
+/* ===================================================================
    Lenis — плавний скрол (класи навішуються на <html> самим Lenis)
    =================================================================== */
 html.lenis,
