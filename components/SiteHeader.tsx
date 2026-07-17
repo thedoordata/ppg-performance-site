@@ -6,8 +6,10 @@
  * екранах показуємо лого + CTA, навігація ховається (md+).
  */
 
+import { SITE } from "@/lib/site";
+
 const NAV = [
-  { label: "Напрямки", href: "#services" },
+  { label: "Напрямки", href: "#scene-engine" },
   { label: "Про нас", href: "#about" },
   { label: "Клієнти", href: "#clients" },
   { label: "Контакти", href: "#contacts" },
@@ -50,10 +52,10 @@ export function SiteHeader() {
         {/* Контакт + CTA */}
         <div className="flex items-center gap-4">
           <a
-            href="tel:+380771002001"
+            href={SITE.phoneHref}
             className="hidden font-mono text-xs tracking-[0.15em] text-fog-white transition-colors hover:text-signal-yellow lg:inline"
           >
-            077 100 2001
+            {SITE.phoneDisplay}
           </a>
           <a
             href="#contacts"

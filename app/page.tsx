@@ -1,7 +1,9 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { HeroScene } from "@/components/HeroScene";
 import { SceneSection } from "@/components/SceneSection";
-import { FinalPlaceholder } from "@/components/FinalPlaceholder";
+import { FinalScene } from "@/components/FinalScene";
+import { ContactsSection } from "@/components/ContactsSection";
+import { SiteFooter } from "@/components/SiteFooter";
 import { SCENES } from "@/lib/scenes";
 
 export default function Home() {
@@ -17,9 +19,14 @@ export default function Home() {
           <SceneSection key={scene.slug} scene={scene} />
         ))}
 
-        {/* Заглушка фіналу (сцена 10, CTA/контакти — фаза 6) */}
-        <FinalPlaceholder />
+        {/* Сцена 10 — фінал + CTA (фаза 6) */}
+        <FinalScene />
+
+        {/* Контакти (адреса, телефон, Instagram, графік, карта) */}
+        <ContactsSection />
       </main>
+
+      <SiteFooter />
     </>
   );
 }
