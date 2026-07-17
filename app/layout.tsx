@@ -3,6 +3,9 @@ import { Unbounded, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Tachometer } from "@/components/Tachometer";
+import { Preloader } from "@/components/Preloader";
+import { Letterbox } from "@/components/Letterbox";
+import { CustomCursor } from "@/components/CustomCursor";
 
 /**
  * Display — заголовки сцен, лого, капс (ТЗ 5.2).
@@ -82,7 +85,10 @@ export default function RootLayout({
     >
       <body className="bg-carbon-black font-body text-fog-white antialiased">
         <SmoothScroll>{children}</SmoothScroll>
+        <Letterbox />
         <Tachometer />
+        <CustomCursor />
+        <Preloader />
       </body>
     </html>
   );

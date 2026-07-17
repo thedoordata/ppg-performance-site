@@ -54,14 +54,15 @@ npm run lint    # ESLint
 - [x] **Фаза 5** — тахометр-скролбар: кругова шкала, голка обертається за прогресом сторінки (0–100%) і входить у «редзону» (жовтий→ember) біля фінальної CTA
 - [x] **Фаза 6** — фінал (сцена 10: три авто + CTA), блок контактів (адреса/телефон/Instagram/графік/карта), футер + structured data (AutoRepair) для локального SEO
 - [x] **Фаза 7** — адаптив під мобільні: сцени 2–9 без піну (легкий reveal-on-enter замість scrub — коротша й плавніша сторінка), бургер-меню, менший тахометр; виправлено видимість вмісту при reduced-motion
-- [ ] Фаза 8 — полірування (letterbox, прелоадер, курсор)
+- [x] **Фаза 8** — полірування: прелоадер «запуск двигуна» (голка тахометра йде вгору), letterbox-затемнення країв на переходах, кастомний курсор (світловий блик) — усе деградує на reduced-motion / тач
 
 ## Структура
 
 ```
 app/            App Router: layout (шрифти/SEO/SmoothScroll), globals.css (токени), page
 components/     SmoothScroll, SiteHeader, HeroScene, SceneSection, Tachometer,
-                FinalScene, ContactsSection, SiteFooter
+                FinalScene, ContactsSection, SiteFooter,
+                Preloader, Letterbox, CustomCursor
 lib/scenes.ts   дані сцен 2–9 (заголовки, підтексти, послуги, акценти)
 lib/site.ts     контактні дані (адреса, телефон, Instagram, графік) — єдине джерело
 public/scenes/  00-hero … 10-final — плейсхолдери під кадри/відео від клієнта

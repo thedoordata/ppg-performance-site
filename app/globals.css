@@ -207,6 +207,43 @@
 }
 
 /* ===================================================================
+   Фаза 8 — полірування: прелоадер, курсор
+   =================================================================== */
+
+/* Запобіжник: якщо JS не виконався, оверлей прелоадера зникає за 4с. */
+.preloader {
+  animation: preloader-failsafe 0.5s ease 4s forwards;
+}
+@keyframes preloader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Кастомний курсор: ховаємо системний тільки коли наш активний. */
+.has-custom-cursor,
+.has-custom-cursor * {
+  cursor: none !important;
+}
+.cursor-el {
+  opacity: 0;
+  will-change: transform;
+}
+.has-custom-cursor .cursor-el {
+  opacity: 1;
+}
+.cursor-dot {
+  box-shadow: 0 0 10px 2px rgba(244, 197, 30, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader {
+    animation: none;
+  }
+}
+
+/* ===================================================================
    Фаза 6 — фінал + контакти
    =================================================================== */
 .final-atmo {
