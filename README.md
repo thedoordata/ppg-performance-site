@@ -63,7 +63,7 @@ app/            App Router: layout (шрифти/SEO/SmoothScroll), globals.css 
 components/     SmoothScroll, SiteHeader, HeroScene, SceneSection, Tachometer,
                 FinalScene, ContactsSection, SiteFooter,
                 Preloader, Letterbox, CustomCursor
-lib/scenes.ts   дані сцен 2–9 (заголовки, підтексти, послуги, акценти)
+lib/scenes.ts   дані сцен 2–9 (заголовки, послуги, повний перелік/акордеон, акценти)
 lib/site.ts     контактні дані (адреса, телефон, Instagram, графік) — єдине джерело
 public/scenes/  00-hero … 10-final — плейсхолдери під кадри/відео від клієнта
 docs/TZ.md      повне творче ТЗ

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
@@ -23,6 +23,7 @@ type SceneStyle = React.CSSProperties & { "--accent": string };
  */
 export function SceneSection({ scene }: { scene: Scene }) {
   const root = useRef<HTMLElement>(null);
+  const [open, setOpen] = useState(false);
 
   useGSAP(
     () => {
@@ -62,7 +63,8 @@ export function SceneSection({ scene }: { scene: Scene }) {
                 { autoAlpha: 0, y: 12, stagger: 0.04, duration: 0.35 },
                 0.3,
               )
-              .from(q(".scene-media"), { autoAlpha: 0, duration: 0.35 }, 0.34);
+              .from(q(".scene-more"), { autoAlpha: 0, y: 12, duration: 0.35 }, 0.36)
+              .from(q(".scene-media"), { autoAlpha: 0, duration: 0.35 }, 0.42);
             return;
           }
 
@@ -116,6 +118,12 @@ export function SceneSection({ scene }: { scene: Scene }) {
               { autoAlpha: 0, y: 14 },
               { autoAlpha: 1, y: 0, stagger: 0.03, duration: 0.3 },
               0.32,
+            )
+            .fromTo(
+              q(".scene-more"),
+              { autoAlpha: 0, y: 12 },
+              { autoAlpha: 1, y: 0, duration: 0.3 },
+              0.38,
             )
             .fromTo(
               q(".scene-media"),
@@ -189,6 +197,54 @@ export function SceneSection({ scene }: { scene: Scene }) {
               </li>
             ))}
           </ul>
+
+          {/* Акордеон: повний перелік напрямку (ТЗ 4) */}
+          <div className="scene-more mt-6">
+            <button
+              type="button"
+              onClick={() => setOpen((v) => !v)}
+              aria-expanded={open}
+              aria-controls={`services-${scene.slug}`}
+              className="group flex items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-gunmetal-silver transition-colors hover:text-signal-yellow"
+            >
+              <span>
+                {open ? "Згорнути перелік" : "Показати всі послуги напрямку"}
+              </span>
+              <span className="scene-accent-text">
+                ({scene.allServices.length})
+              </span>
+              <svg
+                viewBox="0 0 24 24"
+                className={`h-3.5 w-3.5 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                aria-hidden="true"
+              >
+                <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+
+            <div
+              id={`services-${scene.slug}`}
+              data-lenis-prevent
+              className={`transition-[max-height] duration-500 ease-out motion-reduce:transition-none ${
+                open ? "mt-5 max-h-[30vh] overflow-y-auto" : "max-h-0 overflow-hidden"
+              }`}
+            >
+              <ul className="grid grid-cols-1 gap-x-8 gap-y-2.5 pr-2 sm:grid-cols-2">
+                {scene.allServices.map((s) => (
+                  <li
+                    key={s}
+                    className="flex items-baseline gap-2.5 font-body text-sm text-gunmetal-silver/85"
+                  >
+                    <span className="scene-dot mt-1.5 h-1 w-1 shrink-0 rounded-full" />
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
 
           <div className="scene-media mt-8 flex items-start gap-3">
             <span className="mt-0.5 shrink-0 whitespace-nowrap font-mono text-[0.6rem] tracking-[0.2em] text-gunmetal-silver/45">

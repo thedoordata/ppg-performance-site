@@ -184,6 +184,10 @@
   color: var(--accent);
 }
 
+.scene-accent-text {
+  color: var(--accent);
+}
+
 /* Кути рамки-viewfinder */
 .vf-corner {
   border-color: color-mix(in srgb, var(--accent) 45%, transparent);
