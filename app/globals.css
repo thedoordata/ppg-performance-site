@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+/* ===================================================================
+   PPG Performance — глобальні токени
+   Палітра з CLAUDE.md / docs/TZ.md (розділ 5.1) заведена як CSS-змінні.
+   Це єдине джерело правди для кольорів — далі всі утиліти й компоненти
+   посилаються на них.
+   =================================================================== */
+:root {
+  --carbon-black: #0b0b0d; /* базовий фон, «темрява боксу»       */
+  --signal-yellow: #f4c51e; /* фірмовий акцент, CTA, обвід воріт  */
+  --gunmetal-silver: #b8bec7; /* металік, іконки, вторинний текст */
+  --steel-grey: #4a4e57; /* вторинні поверхні, роздільники       */
+  --ember-heat: #ff5a36; /* «жар» — вихлоп/турбо/гальма, точково */
+  --fog-white: #ecedef; /* основний текст на темному фоні        */
+}
+
+/* Прокидаємо палітру та шрифти у Tailwind-тему (v4 @theme inline).
+   `inline` → утиліти посилаються прямо на CSS-змінні вище, тож колір
+   можна перевизначати на рівні секції (напр. «редзона» тахометра). */
+@theme inline {
+  --color-carbon-black: var(--carbon-black);
+  --color-signal-yellow: var(--signal-yellow);
+  --color-gunmetal-silver: var(--gunmetal-silver);
+  --color-steel-grey: var(--steel-grey);
+  --color-ember-heat: var(--ember-heat);
+  --color-fog-white: var(--fog-white);
+
+  /* Змінні --font-* прокидає next/font через className на <html>.
+     Display — тимчасова заміна Druk Wide / Neue Machina (ТЗ 5.2). */
+  --font-display: var(--font-unbounded), "Arial Narrow", sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    background-color: var(--carbon-black);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--carbon-black);
+    color: var(--fog-white);
+    font-family: var(--font-body);
+  }
+
+  ::selection {
+    background: var(--signal-yellow);
+    color: var(--carbon-black);
+  }
+}
+
+/* ===================================================================
+   Кінематографічні утиліти (плейсхолдери фази 2 — до реальних кадрів)
+   =================================================================== */
+
+/* Атмосфера боксу: тепле точкове світло згори + вінʼєтка по краях. */
+.box-atmosphere {
+  background:
+    radial-gradient(
+      130% 90% at 50% -20%,
+      rgba(244, 197, 30, 0.12),
+      rgba(244, 197, 30, 0) 55%
+    ),
+    radial-gradient(
+      140% 130% at 50% 118%,
+      rgba(0, 0, 0, 0.85),
+      rgba(0, 0, 0, 0) 60%
+    );
+}
+
+/* Жовта окантовка воріт (фірмовий обвід + легке світіння). */
+.gate-frame {
+  border: 3px solid var(--signal-yellow);
+  background-color: var(--carbon-black);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 0 46px rgba(244, 197, 30, 0.12),
+    inset 0 0 70px rgba(0, 0, 0, 0.72);
+}
+
+/* Ролетні ворота: горизонтальні ламелі з металевим відблиском поверх
+   верхньо-підсвіченого вертикального градієнта (світло згори, темрява
+   в глибині боксу знизу). */
+.gate-shutter {
+  background-color: #2c2f35;
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.12) 0px,
+      rgba(255, 255, 255, 0.04) 2px,
+      rgba(0, 0, 0, 0.32) 12px,
+      rgba(0, 0, 0, 0.62) 18px,
+      rgba(0, 0, 0, 0.32) 20px,
+      rgba(255, 255, 255, 0.12) 22px
+    ),
+    linear-gradient(
+      180deg,
+      #52565f 0%,
+      #3a3d44 42%,
+      #212327 78%,
+      #15161a 100%
+    );
+  background-size:
+    100% 22px,
+    100% 100%;
+}

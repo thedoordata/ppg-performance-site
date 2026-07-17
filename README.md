@@ -1,1 +1,71 @@
-# ppg-performance-site
+# PPG Performance — Cinematic Landing Page
+
+Скрол-кінематографічний лендинг для **PPG Performance** — тюнінг-ательє та
+СТО преміум-класу в Києві (Stage 1–4, чіп-тюнінг, діагностика). Аудиторія —
+власники Porsche / BMW / Mercedes.
+
+Творче ТЗ: [`docs/TZ.md`](docs/TZ.md) · практичний орієнтир: [`CLAUDE.md`](CLAUDE.md).
+
+## Стек
+
+- **Next.js 16** (App Router, `output: "export"`) + **TypeScript** — важлива SEO-індексація
+- **Tailwind CSS v4** — токени палітри/шрифтів через `@theme` у `app/globals.css`
+- **GSAP + ScrollTrigger** (`gsap`, `@gsap/react`) — покадрова анімація по скролу _(підключення — фаза 3)_
+- **Lenis** — плавний інерційний скрол _(підключення — фаза 3)_
+- Шрифти через **next/font** (self-hosted, з кирилицею)
+
+## Скрипти
+
+```bash
+npm run dev     # локальна розробка (http://localhost:3000)
+npm run build   # статичний експорт у ./out
+npm run lint    # ESLint
+```
+
+## Дизайн-токени
+
+Палітра заведена як CSS-змінні в `app/globals.css` і прокинута в Tailwind-тему:
+
+| Змінна              | HEX       | Роль                              |
+| ------------------- | --------- | --------------------------------- |
+| `--carbon-black`    | `#0B0B0D` | базовий фон, «темрява боксу»       |
+| `--signal-yellow`   | `#F4C51E` | фірмовий акцент, CTA, обвід воріт  |
+| `--gunmetal-silver` | `#B8BEC7` | металік, іконки, вторинний текст   |
+| `--steel-grey`      | `#4A4E57` | вторинні поверхні, роздільники     |
+| `--ember-heat`      | `#FF5A36` | «жар» — вихлоп/турбо/гальма        |
+| `--fog-white`       | `#ECEDEF` | основний текст на темному фоні     |
+
+Утиліти Tailwind: `bg-carbon-black`, `text-signal-yellow`, `font-display`,
+`font-mono` тощо.
+
+### Шрифти (тимчасові заміни)
+
+- **Display:** Unbounded — тимчасова заміна Druk Wide / Neue Machina (широкий,
+  важкий, з кирилицею). `--font-display`
+- **Body:** Inter. `--font-body`
+- **Utility/дані:** JetBrains Mono. `--font-mono`
+
+## Статус реалізації (фази з CLAUDE.md)
+
+- [x] **Фаза 1** — скаффолд Next.js + TS + Tailwind, палітра, шрифти, GSAP/Lenis у залежностях
+- [x] **Фаза 2** — Hero-сцена (закриті ворота-плейсхолдер, лого-заглушка, жовта окантовка) + фіксований header
+- [ ] Фаза 3 — механіка скролу (Lenis + ScrollTrigger, пінінг, відкриття воріт 0–100%)
+- [ ] Фаза 4 — заготовки сцен 2–9 (pinned-секції з плейсхолдерами)
+- [ ] Фаза 5 — тахометр-скролбар
+- [ ] Фаза 6 — фінальна сцена + контакти/CTA
+- [ ] Фаза 7 — адаптив під мобільні
+- [ ] Фаза 8 — полірування (letterbox, прелоадер, курсор)
+
+## Структура
+
+```
+app/            App Router: layout (шрифти/SEO), globals.css (токени), page
+components/     SiteHeader, HeroScene (далі — сцени 1–10)
+public/scenes/  00-hero … 10-final — плейсхолдери під кадри/відео від клієнта
+docs/TZ.md      повне творче ТЗ
+```
+
+## Асети
+
+Реальних фото/відео поки немає — використовуються плейсхолдери до отримання
+матеріалів від клієнта (ТЗ 10).
