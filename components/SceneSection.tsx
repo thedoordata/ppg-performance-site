@@ -9,13 +9,17 @@ import type { Scene } from "@/lib/scenes";
 type SceneStyle = React.CSSProperties & { "--accent": string };
 
 /**
- * Одна макро-сцена (2–9) як pinned-секція з плейсхолдером (CLAUDE.md фаза 4).
- * Пін + scrub-таймлайн: сцена «проявляється» з чорного, вміст виїжджає,
- * наприкінці — знову затемнення (перехід між макро-сценами, ТЗ 3.6 / 5.4).
+ * Одна макро-сцена (2–9) як плейсхолдер (CLAUDE.md фаза 4 + адаптив фаза 7).
+ *
+ * Desktop: pinned-секція + scrub-таймлайн — сцена «проявляється» з чорного,
+ * вміст виїжджає, наприкінці знову затемнення (перехід між сценами, ТЗ 3.6).
+ * Mobile: без піну — спрощений reveal-on-enter (легше для тач-скролу й
+ * коротша сторінка; CLAUDE.md: анімація деградує, а не вимикається).
+ * Reduced-motion: без анімації, вміст видимий одразу (початковий стан ховає
+ * лише GSAP, тому без нього все лишається на місці).
  *
  * Реальні фото/відео відсутні — замість кадру суцільний колір-акцент сцени
- * + підпис «що має бути в кадрі». Деградація: prefers-reduced-motion →
- * без піну, статична секція (вміст видимий за замовчуванням).
+ * + підпис «що має бути в кадрі».
  */
 export function SceneSection({ scene }: { scene: Scene }) {
   const root = useRef<HTMLElement>(null);
@@ -40,12 +44,35 @@ export function SceneSection({ scene }: { scene: Scene }) {
           };
           if (!motionOk) return;
 
+          // --- Mobile: легкий reveal при вході, без піну ---
+          if (isMobile) {
+            const tl = gsap.timeline({
+              scrollTrigger: { trigger: root.current, start: "top 74%", once: true },
+            });
+            tl.from(q(".scene-num-wm"), { autoAlpha: 0, duration: 0.5 }, 0)
+              .from(q(".scene-eyebrow"), { autoAlpha: 0, y: 14, duration: 0.4 }, 0.05)
+              .from(
+                q(".scene-title"),
+                { autoAlpha: 0, y: 26, duration: 0.5, ease: "power2.out" },
+                0.12,
+              )
+              .from(q(".scene-sub"), { autoAlpha: 0, y: 16, duration: 0.4 }, 0.24)
+              .from(
+                q(".scene-chip"),
+                { autoAlpha: 0, y: 12, stagger: 0.04, duration: 0.35 },
+                0.3,
+              )
+              .from(q(".scene-media"), { autoAlpha: 0, duration: 0.35 }, 0.34);
+            return;
+          }
+
+          // --- Desktop: пін + scrub ---
           const tl = gsap.timeline({
             defaults: { ease: "none" },
             scrollTrigger: {
               trigger: root.current,
               start: "top top",
-              end: isMobile ? "+=60%" : "+=90%",
+              end: "+=90%",
               pin: true,
               scrub: 0.5,
               anticipatePin: 1,
@@ -54,14 +81,12 @@ export function SceneSection({ scene }: { scene: Scene }) {
           });
 
           tl
-            // проявлення з чорного
             .fromTo(
               q(".scene-veil"),
               { autoAlpha: 1 },
               { autoAlpha: 0, ease: "power1.out", duration: 0.16 },
               0,
             )
-            // фоновий номер-водяний знак
             .fromTo(
               q(".scene-num-wm"),
               { autoAlpha: 0, xPercent: 6 },
@@ -98,7 +123,6 @@ export function SceneSection({ scene }: { scene: Scene }) {
               { autoAlpha: 1, duration: 0.3 },
               0.22,
             )
-            // затемнення на виході (перехід до наступної сцени)
             .to(
               q(".scene-veil"),
               { autoAlpha: 1, ease: "power1.in", duration: 0.14 },
@@ -120,8 +144,8 @@ export function SceneSection({ scene }: { scene: Scene }) {
       style={{ "--accent": scene.accent } as SceneStyle}
       className="scene-atmo relative flex h-[100svh] min-h-[600px] w-full items-center overflow-hidden"
     >
-      {/* Фоновий номер-водяний знак */}
-      <span className="scene-num-wm pointer-events-none absolute -right-2 top-1/2 -translate-y-1/2 font-display text-[30vw] font-extrabold leading-none opacity-0 sm:text-[22vw]">
+      {/* Фоновий номер-водяний знак (завжди приглушений) */}
+      <span className="scene-num-wm pointer-events-none absolute -right-2 top-1/2 -translate-y-1/2 font-display text-[30vw] font-extrabold leading-none opacity-[0.12] sm:text-[22vw]">
         {scene.n}
       </span>
 
@@ -136,7 +160,7 @@ export function SceneSection({ scene }: { scene: Scene }) {
       {/* Вміст сцени */}
       <div className="relative z-10 mx-auto w-full max-w-5xl px-6 sm:px-10">
         <div className="max-w-2xl">
-          <div className="scene-eyebrow mb-5 flex flex-wrap items-center gap-3 opacity-0">
+          <div className="scene-eyebrow mb-5 flex flex-wrap items-center gap-3">
             <span className="scene-dot h-2 w-2 rounded-full" />
             <span className="font-mono text-xs tracking-[0.3em] text-fog-white/80">
               {scene.n}&nbsp;/&nbsp;{scene.name.toUpperCase()}
@@ -147,11 +171,11 @@ export function SceneSection({ scene }: { scene: Scene }) {
             </span>
           </div>
 
-          <h2 className="scene-title whitespace-pre-line font-display text-4xl font-extrabold uppercase leading-[1.03] tracking-[0.01em] text-fog-white opacity-0 sm:text-6xl">
+          <h2 className="scene-title whitespace-pre-line font-display text-4xl font-extrabold uppercase leading-[1.03] tracking-[0.01em] text-fog-white sm:text-6xl">
             {scene.title}
           </h2>
 
-          <p className="scene-sub mt-5 max-w-xl font-body text-sm leading-relaxed text-gunmetal-silver opacity-0 sm:text-base">
+          <p className="scene-sub mt-5 max-w-xl font-body text-sm leading-relaxed text-gunmetal-silver sm:text-base">
             {scene.subtitle}
           </p>
 
@@ -159,14 +183,14 @@ export function SceneSection({ scene }: { scene: Scene }) {
             {scene.services.map((s) => (
               <li
                 key={s}
-                className="scene-chip px-3 py-1.5 font-mono text-[0.68rem] tracking-[0.08em] opacity-0"
+                className="scene-chip px-3 py-1.5 font-mono text-[0.68rem] tracking-[0.08em]"
               >
                 {s}
               </li>
             ))}
           </ul>
 
-          <div className="scene-media mt-8 flex items-start gap-3 opacity-0">
+          <div className="scene-media mt-8 flex items-start gap-3">
             <span className="mt-0.5 shrink-0 whitespace-nowrap font-mono text-[0.6rem] tracking-[0.2em] text-gunmetal-silver/45">
               {"// У КАДРІ"}
             </span>
@@ -177,7 +201,7 @@ export function SceneSection({ scene }: { scene: Scene }) {
         </div>
       </div>
 
-      {/* Завіса для переходів між сценами */}
+      {/* Завіса для переходів між сценами (desktop) */}
       <div
         className="scene-veil absolute inset-0 z-20 bg-carbon-black opacity-0"
         aria-hidden="true"

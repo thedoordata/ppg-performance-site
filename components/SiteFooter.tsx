@@ -44,7 +44,7 @@ export function SiteFooter() {
         <span className="font-mono text-[0.6rem] tracking-[0.2em] text-gunmetal-silver/40">
           © 2026 PPG PERFORMANCE
         </span>
-        <span className="font-mono text-[0.6rem] tracking-[0.2em] text-gunmetal-silver/40">
+        <span className="hidden font-mono text-[0.6rem] tracking-[0.2em] text-gunmetal-silver/40 sm:inline">
           КИЇВ · UA
         </span>
       </div>

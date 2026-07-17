@@ -95,7 +95,7 @@ export function Tachometer() {
   return (
     <div
       ref={root}
-      className="tacho pointer-events-none fixed bottom-5 right-5 z-40 h-[88px] w-[88px] sm:bottom-7 sm:right-7 sm:h-28 sm:w-28"
+      className="tacho pointer-events-none fixed bottom-4 right-4 z-40 h-16 w-16 sm:bottom-7 sm:right-7 sm:h-28 sm:w-28"
       aria-hidden="true"
     >
       <svg viewBox="0 0 100 100" className="h-full w-full">
