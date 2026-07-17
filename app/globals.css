@@ -1,0 +1,335 @@
+@import "tailwindcss";
+
+/* ===================================================================
+   PPG Performance — глобальні токени
+   Палітра з CLAUDE.md / docs/TZ.md (розділ 5.1) заведена як CSS-змінні.
+   Це єдине джерело правди для кольорів — далі всі утиліти й компоненти
+   посилаються на них.
+   =================================================================== */
+:root {
+  --carbon-black: #0b0b0d; /* базовий фон, «темрява боксу»       */
+  --signal-yellow: #f4c51e; /* фірмовий акцент, CTA, обвід воріт  */
+  --gunmetal-silver: #b8bec7; /* металік, іконки, вторинний текст */
+  --steel-grey: #4a4e57; /* вторинні поверхні, роздільники       */
+  --ember-heat: #ff5a36; /* «жар» — вихлоп/турбо/гальма, точково */
+  --fog-white: #ecedef; /* основний текст на темному фоні        */
+}
+
+/* Прокидаємо палітру та шрифти у Tailwind-тему (v4 @theme inline).
+   `inline` → утиліти посилаються прямо на CSS-змінні вище, тож колір
+   можна перевизначати на рівні секції (напр. «редзона» тахометра). */
+@theme inline {
+  --color-carbon-black: var(--carbon-black);
+  --color-signal-yellow: var(--signal-yellow);
+  --color-gunmetal-silver: var(--gunmetal-silver);
+  --color-steel-grey: var(--steel-grey);
+  --color-ember-heat: var(--ember-heat);
+  --color-fog-white: var(--fog-white);
+
+  /* Змінні --font-* прокидає next/font через className на <html>.
+     Display — тимчасова заміна Druk Wide / Neue Machina (ТЗ 5.2). */
+  --font-display: var(--font-unbounded), "Arial Narrow", sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    background-color: var(--carbon-black);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--carbon-black);
+    color: var(--fog-white);
+    font-family: var(--font-body);
+  }
+
+  ::selection {
+    background: var(--signal-yellow);
+    color: var(--carbon-black);
+  }
+}
+
+/* ===================================================================
+   Кінематографічні утиліти (плейсхолдери фази 2 — до реальних кадрів)
+   =================================================================== */
+
+/* Атмосфера боксу: тепле точкове світло згори + вінʼєтка по краях. */
+.box-atmosphere {
+  background:
+    radial-gradient(
+      130% 90% at 50% -20%,
+      rgba(244, 197, 30, 0.12),
+      rgba(244, 197, 30, 0) 55%
+    ),
+    radial-gradient(
+      140% 130% at 50% 118%,
+      rgba(0, 0, 0, 0.85),
+      rgba(0, 0, 0, 0) 60%
+    );
+}
+
+/* Жовта окантовка воріт (фірмовий обвід + легке світіння).
+   overflow: hidden — щоб ролета «в'їжджала» за раму при підйомі (фаза 3). */
+.gate-frame {
+  overflow: hidden;
+  border: 3px solid var(--signal-yellow);
+  background-color: var(--carbon-black);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 0 46px rgba(244, 197, 30, 0.12),
+    inset 0 0 70px rgba(0, 0, 0, 0.72);
+}
+
+/* Ролетні ворота: горизонтальні ламелі з металевим відблиском поверх
+   верхньо-підсвіченого вертикального градієнта (світло згори, темрява
+   в глибині боксу знизу). */
+.gate-shutter {
+  background-color: #2c2f35;
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.12) 0px,
+      rgba(255, 255, 255, 0.04) 2px,
+      rgba(0, 0, 0, 0.32) 12px,
+      rgba(0, 0, 0, 0.62) 18px,
+      rgba(0, 0, 0, 0.32) 20px,
+      rgba(255, 255, 255, 0.12) 22px
+    ),
+    linear-gradient(
+      180deg,
+      #52565f 0%,
+      #3a3d44 42%,
+      #212327 78%,
+      #15161a 100%
+    );
+  background-size:
+    100% 22px,
+    100% 100%;
+}
+
+/* ===================================================================
+   Фаза 3 — механіка скролу: інтерʼєр боксу за воротами (сцена 1)
+   =================================================================== */
+
+/* Темрява боксу з легким світлом стелі та підлоги (плейсхолдер сцени 1). */
+.box-interior-bg {
+  background:
+    radial-gradient(
+      120% 70% at 50% 118%,
+      rgba(74, 78, 87, 0.32),
+      transparent 60%
+    ),
+    radial-gradient(
+      90% 55% at 50% -8%,
+      rgba(244, 197, 30, 0.07),
+      transparent 55%
+    ),
+    linear-gradient(180deg, #050506 0%, #0b0b0d 58%, #050506 100%);
+}
+
+/* Фара авто, що проявляється з темряви. */
+.headlight-glow {
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 247, 220, 0.95),
+    rgba(244, 197, 30, 0.4) 42%,
+    rgba(244, 197, 30, 0) 76%
+  );
+  filter: blur(2px);
+}
+
+/* Силует авто — плейсхолдер до реального кадру Porsche 911 (ТЗ 4, сцена 1). */
+.car-silhouette {
+  background: linear-gradient(180deg, #15161a 0%, #08080a 100%);
+  clip-path: polygon(
+    0% 100%,
+    3% 66%,
+    13% 48%,
+    29% 35%,
+    45% 30%,
+    61% 31%,
+    77% 39%,
+    89% 53%,
+    100% 76%,
+    100% 100%
+  );
+}
+
+/* ===================================================================
+   Фаза 4 — сцени 2–9 (pinned-плейсхолдери)
+   Акцент сцени задається змінною --accent на <section> (inline style).
+   =================================================================== */
+
+/* Суцільний колір-акцент замість реального кадру + глибина/вінʼєтка. */
+.scene-atmo {
+  background:
+    radial-gradient(
+      78% 58% at 74% 32%,
+      color-mix(in srgb, var(--accent) 15%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(90% 80% at 18% 108%, rgba(0, 0, 0, 0.55), transparent 58%),
+    linear-gradient(180deg, #09090b 0%, var(--carbon-black) 58%, #060607 100%);
+}
+
+.scene-rule,
+.scene-dot {
+  background-color: var(--accent);
+}
+
+.scene-num-wm {
+  color: var(--accent);
+}
+
+.scene-accent-text {
+  color: var(--accent);
+}
+
+/* Кути рамки-viewfinder */
+.vf-corner {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+/* Чіп послуги — технічний «тег», гострі кути (не SaaS-пігулка). */
+.scene-chip {
+  border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+  color: color-mix(in srgb, var(--fog-white) 82%, transparent);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.scene-chip:hover {
+  border-color: color-mix(in srgb, var(--accent) 80%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--fog-white);
+}
+
+/* ===================================================================
+   Фаза 8 — полірування: прелоадер, курсор
+   =================================================================== */
+
+/* Запобіжник: якщо JS не виконався, оверлей прелоадера зникає за 4с. */
+.preloader {
+  animation: preloader-failsafe 0.5s ease 4s forwards;
+}
+@keyframes preloader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Кастомний курсор: ховаємо системний тільки коли наш активний. */
+.has-custom-cursor,
+.has-custom-cursor * {
+  cursor: none !important;
+}
+.cursor-el {
+  opacity: 0;
+  will-change: transform;
+}
+.has-custom-cursor .cursor-el {
+  opacity: 1;
+}
+.cursor-dot {
+  box-shadow: 0 0 10px 2px rgba(244, 197, 30, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader {
+    animation: none;
+  }
+}
+
+/* ===================================================================
+   Фаза 6 — фінал + контакти
+   =================================================================== */
+.final-atmo {
+  background:
+    radial-gradient(70% 45% at 50% 118%, rgba(244, 197, 30, 0.1), transparent 60%),
+    radial-gradient(90% 55% at 50% -12%, rgba(244, 197, 30, 0.05), transparent 55%),
+    linear-gradient(180deg, var(--carbon-black) 0%, #050506 100%);
+}
+
+/* Плейсхолдер карти — технічна сітка «бортового компʼютера». */
+.map-grid {
+  background-color: #0d0e11;
+  background-image:
+    linear-gradient(rgba(184, 190, 199, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184, 190, 199, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* ===================================================================
+   Фаза 5 — тахометр-скролбар (ТЗ 5.3)
+   =================================================================== */
+.tacho {
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.55));
+  transition: filter 0.4s ease;
+}
+.tacho-red {
+  filter: drop-shadow(0 0 14px rgba(255, 90, 54, 0.55));
+}
+
+.tacho-tick {
+  stroke: color-mix(in srgb, var(--gunmetal-silver) 42%, transparent);
+}
+.tacho-tick-major {
+  stroke: color-mix(in srgb, var(--fog-white) 72%, transparent);
+}
+.tacho-tick-red {
+  stroke: var(--ember-heat);
+}
+
+.tacho-needle {
+  fill: var(--fog-white);
+  transition: fill 0.3s ease;
+}
+.tacho-red .tacho-needle {
+  fill: var(--ember-heat);
+}
+
+.tacho-hub {
+  fill: var(--gunmetal-silver);
+}
+
+.tacho-readout {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  fill: var(--gunmetal-silver);
+  transition: fill 0.3s ease;
+}
+.tacho-red .tacho-readout {
+  fill: var(--ember-heat);
+}
+
+/* ===================================================================
+   Lenis — плавний скрол (класи навішуються на <html> самим Lenis)
+   =================================================================== */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
