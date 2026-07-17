@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Unbounded, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { SmoothScroll } from "@/components/SmoothScroll";
 
 /**
  * Display — заголовки сцен, лого, капс (ТЗ 5.2).
@@ -79,7 +80,7 @@ export default function RootLayout({
       className={`${unbounded.variable} ${inter.variable} ${jetBrainsMono.variable}`}
     >
       <body className="bg-carbon-black font-body text-fog-white antialiased">
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
   );

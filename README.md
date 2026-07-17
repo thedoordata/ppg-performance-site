@@ -10,8 +10,8 @@
 
 - **Next.js 16** (App Router, `output: "export"`) + **TypeScript** — важлива SEO-індексація
 - **Tailwind CSS v4** — токени палітри/шрифтів через `@theme` у `app/globals.css`
-- **GSAP + ScrollTrigger** (`gsap`, `@gsap/react`) — покадрова анімація по скролу _(підключення — фаза 3)_
-- **Lenis** — плавний інерційний скрол _(підключення — фаза 3)_
+- **GSAP + ScrollTrigger** (`gsap`, `@gsap/react`) — покадрова анімація, прив'язана до прогресу скролу (пін + scrub)
+- **Lenis** — плавний інерційний скрол, синхронізований зі ScrollTrigger
 - Шрифти через **next/font** (self-hosted, з кирилицею)
 
 ## Скрипти
@@ -49,7 +49,7 @@ npm run lint    # ESLint
 
 - [x] **Фаза 1** — скаффолд Next.js + TS + Tailwind, палітра, шрифти, GSAP/Lenis у залежностях
 - [x] **Фаза 2** — Hero-сцена (закриті ворота-плейсхолдер, лого-заглушка, жовта окантовка) + фіксований header
-- [ ] Фаза 3 — механіка скролу (Lenis + ScrollTrigger, пінінг, відкриття воріт 0–100%)
+- [x] **Фаза 3** — механіка скролу: Lenis + ScrollTrigger, пін Hero, відкриття воріт 0–100% з проявленням авто (сцена 1) + деградація на reduced-motion
 - [ ] Фаза 4 — заготовки сцен 2–9 (pinned-секції з плейсхолдерами)
 - [ ] Фаза 5 — тахометр-скролбар
 - [ ] Фаза 6 — фінальна сцена + контакти/CTA
@@ -59,8 +59,8 @@ npm run lint    # ESLint
 ## Структура
 
 ```
-app/            App Router: layout (шрифти/SEO), globals.css (токени), page
-components/     SiteHeader, HeroScene (далі — сцени 1–10)
+app/            App Router: layout (шрифти/SEO/SmoothScroll), globals.css (токени), page
+components/     SmoothScroll (Lenis+ScrollTrigger), SiteHeader, HeroScene, NextScenesPlaceholder
 public/scenes/  00-hero … 10-final — плейсхолдери під кадри/відео від клієнта
 docs/TZ.md      повне творче ТЗ
 ```

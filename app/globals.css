@@ -71,8 +71,10 @@
     );
 }
 
-/* Жовта окантовка воріт (фірмовий обвід + легке світіння). */
+/* Жовта окантовка воріт (фірмовий обвід + легке світіння).
+   overflow: hidden — щоб ролета «в'їжджала» за раму при підйомі (фаза 3). */
 .gate-frame {
+  overflow: hidden;
   border: 3px solid var(--signal-yellow);
   background-color: var(--carbon-black);
   box-shadow:
@@ -106,4 +108,76 @@
   background-size:
     100% 22px,
     100% 100%;
+}
+
+/* ===================================================================
+   Фаза 3 — механіка скролу: інтерʼєр боксу за воротами (сцена 1)
+   =================================================================== */
+
+/* Темрява боксу з легким світлом стелі та підлоги (плейсхолдер сцени 1). */
+.box-interior-bg {
+  background:
+    radial-gradient(
+      120% 70% at 50% 118%,
+      rgba(74, 78, 87, 0.32),
+      transparent 60%
+    ),
+    radial-gradient(
+      90% 55% at 50% -8%,
+      rgba(244, 197, 30, 0.07),
+      transparent 55%
+    ),
+    linear-gradient(180deg, #050506 0%, #0b0b0d 58%, #050506 100%);
+}
+
+/* Фара авто, що проявляється з темряви. */
+.headlight-glow {
+  background: radial-gradient(
+    closest-side,
+    rgba(255, 247, 220, 0.95),
+    rgba(244, 197, 30, 0.4) 42%,
+    rgba(244, 197, 30, 0) 76%
+  );
+  filter: blur(2px);
+}
+
+/* Силует авто — плейсхолдер до реального кадру Porsche 911 (ТЗ 4, сцена 1). */
+.car-silhouette {
+  background: linear-gradient(180deg, #15161a 0%, #08080a 100%);
+  clip-path: polygon(
+    0% 100%,
+    3% 66%,
+    13% 48%,
+    29% 35%,
+    45% 30%,
+    61% 31%,
+    77% 39%,
+    89% 53%,
+    100% 76%,
+    100% 100%
+  );
+}
+
+/* ===================================================================
+   Lenis — плавний скрол (класи навішуються на <html> самим Lenis)
+   =================================================================== */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
