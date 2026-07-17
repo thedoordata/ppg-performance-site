@@ -51,7 +51,7 @@ npm run lint    # ESLint
 - [x] **Фаза 2** — Hero-сцена (закриті ворота-плейсхолдер, лого-заглушка, жовта окантовка) + фіксований header
 - [x] **Фаза 3** — механіка скролу: Lenis + ScrollTrigger, пін Hero, відкриття воріт 0–100% з проявленням авто (сцена 1) + деградація на reduced-motion
 - [x] **Фаза 4** — сцени 2–9 як послідовні pinned-плейсхолдери (заголовок-твердження, список послуг, акцент сцени, підпис «що в кадрі») + затемнення-переходи між сценами
-- [ ] Фаза 5 — тахометр-скролбар
+- [x] **Фаза 5** — тахометр-скролбар: кругова шкала, голка обертається за прогресом сторінки (0–100%) і входить у «редзону» (жовтий→ember) біля фінальної CTA
 - [ ] Фаза 6 — фінальна сцена + контакти/CTA
 - [ ] Фаза 7 — адаптив під мобільні
 - [ ] Фаза 8 — полірування (letterbox, прелоадер, курсор)
@@ -60,7 +60,7 @@ npm run lint    # ESLint
 
 ```
 app/            App Router: layout (шрифти/SEO/SmoothScroll), globals.css (токени), page
-components/     SmoothScroll (Lenis+ScrollTrigger), SiteHeader, HeroScene, SceneSection, FinalPlaceholder
+components/     SmoothScroll (Lenis+ScrollTrigger), SiteHeader, HeroScene, SceneSection, Tachometer, FinalPlaceholder
 lib/scenes.ts   дані сцен 2–9 (заголовки, підтексти, послуги, акценти)
 public/scenes/  00-hero … 10-final — плейсхолдери під кадри/відео від клієнта
 docs/TZ.md      повне творче ТЗ
